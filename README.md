@@ -1,2 +1,2 @@
-# option-validate
+# option-validator
 A simple option validator

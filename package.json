@@ -1,0 +1,29 @@
+{
+  "name": "option-validator",
+  "version": "1.0.0",
+  "description": "A simple option validator",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zhw2590582/option-validator.git"
+  },
+  "keywords": [
+    "option",
+    "validator"
+  ],
+  "author": "Harvey Zack <laozhaochaguan@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/zhw2590582/option-validator/issues"
+  },
+  "homepage": "https://github.com/zhw2590582/option-validator#readme",
+  "devDependencies": {
+    "jest": "^23.6.0"
+  },
+  "dependencies": {
+    "kind-of": "^6.0.2"
+  }
+}
