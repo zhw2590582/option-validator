@@ -1,6 +1,6 @@
 {
   "name": "option-validator",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "A simple option validator",
   "main": "index.js",
   "scripts": {

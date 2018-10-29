@@ -1,7 +1,7 @@
 import optionValidator from '..';
 import { baseOption, baseRule} from './data';
 
-test('Shallow object', () => {
+test('Shallow array', () => {
   const baseRuleCopy = {
     type: 'array'
   };

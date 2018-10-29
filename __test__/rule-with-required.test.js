@@ -10,9 +10,7 @@ test('Rule with required', () => {
     };
   
     delete baseOptionCopy.typeBoolean;
-    
-    expect(() => {
-        const { errors } = new optionValidator(baseOptionCopy, baseRuleCopy);
-    }).toThrow(/required/);
+    const { errors } = new optionValidator(baseOptionCopy, baseRuleCopy);
+    expect(errors.length).toBe(1);
   });
   

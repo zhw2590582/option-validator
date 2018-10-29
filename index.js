@@ -4,9 +4,6 @@ export default class OptionValidator {
   constructor(option, rule, paths = ['option']) {
     this.errors = [];
     this.verifyRule(option, rule, paths);
-    this.errors.forEach(msg => {
-      throw new TypeError(msg);
-    });
   }
 
   verifyRule(option, rule, paths) {
@@ -18,9 +15,8 @@ export default class OptionValidator {
       if (!Object.prototype.hasOwnProperty.call(option, key)) {
         if (ruleValue.__required__ === true || ruleValue.required === true) {
           this.errors.push(`'${paths.join('.')}.${key}' is required`);
-        } else {
-          return;
         }
+        return;
       }
 
       let ruleType;
@@ -32,13 +28,6 @@ export default class OptionValidator {
         ruleType = ruleValue.type;
       } else {
         throw new TypeError(`The rule for '${paths.join('.')}.${key}' seems to be missing the 'type' or '__type__' option`);
-      }
-
-      let ruleChild;
-      if (ruleValue.___child__) {
-        ruleChild = ruleValue.___child__;
-      } else if (ruleValue.child) {
-        ruleChild = ruleValue.child;
       }
 
       if (optionType !== ruleType) {
@@ -57,6 +46,13 @@ export default class OptionValidator {
         if (resule !== true) {
           this.errors.push(`The rule for '${paths.join('.')}.${key}' validator function require return true, but got '${resule}'`);
         }
+      }
+
+      let ruleChild;
+      if (ruleValue.___child__) {
+        ruleChild = ruleValue.___child__;
+      } else if (ruleValue.child) {
+        ruleChild = ruleValue.child;
       }
 
       if (kindOf(ruleChild) === 'object') {
