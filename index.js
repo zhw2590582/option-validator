@@ -1,38 +1,37 @@
 import kindOf from 'kind-of';
 
-let path = ['option'];
-export default function optionValidator(option, rule) {
+export default function optionValidator(option, rule, paths = ['option']) {
   const rootType = kindOf(option);
   if (rootType === 'object') {
-    verifyObject(option, rule);
+    verifyObject(option, rule, paths);
   } else if (rootType === 'array') {
-    verifyArray(option, rule);
+    verifyArray(option, rule, paths);
   }
-  return true;
 }
 
-function verifyObject(option, rule) {
+function verifyObject(option, rule, paths) {
   Object.keys(option).forEach(key => {
     const optionValue = option[key];
     const optionType = kindOf(optionValue);
     const ruleValue = rule[key];
     const ruleType = kindOf(ruleValue) === 'string' ? ruleValue : ruleValue.type;
-    if (optionType !== ruleType) {
-        throw new VerifyError('参数错误啦！！');
-    }
+    optionValidator(optionValue, ruleValue, paths.concat(key));
+    errorHandle(optionType === ruleType, `'${paths.join('.')}.${key}' require '${ruleType}' type, but got '${optionType}'`);
   });
 }
 
-function verifyArray(option, rule) {
-    //
+function verifyArray(option, rule, paths) {
+  option.forEach((item, index) => {
+    const optionValue = option[key];
+    const optionType = kindOf(optionValue);
+    const ruleValue = rule[key];
+    const ruleType = kindOf(ruleValue) === 'string' ? ruleValue : ruleValue.type;
+    optionValidator(optionValue, ruleValue, paths.concat(`${key}[${index}]`));
+  });
 }
 
-class VerifyError extends Error {
-  constructor(message, context) {
-    super(message);
-    if (typeof Error.captureStackTrace === 'function') {
-      Error.captureStackTrace(this, context || this.constructor);
-    }
-    this.name = 'verifyError';
+function errorHandle(condition, msg) {
+  if (!condition) {
+    throw new TypeError(msg);
   }
 }
