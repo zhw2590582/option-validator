@@ -2,8 +2,11 @@ import kindOf from 'kind-of';
 
 export default class OptionValidator {
   constructor(option, rule, paths = ['option']) {
-    this.errorState = [];
+    this.errors = [];
     this.verifyRoot(option, rule, paths);
+    this.errors.forEach(msg => {
+      this.errorHandle(false, msg);
+    });
   }
 
   verifyRoot(option, rule, paths) {
@@ -16,20 +19,33 @@ export default class OptionValidator {
   }
 
   verifyObject(option, rule, paths) {
-    Object.keys(option).forEach(key => {
+    Object.keys(rule).forEach(key => {
       const optionValue = option[key];
       const optionType = kindOf(optionValue);
       const ruleValue = rule[key];
-      
+
+      if (!ruleValue) {
+        return;
+      }
+
       let ruleType;
-      try {
-        ruleType = kindOf(ruleValue) === 'string' ? ruleValue : ruleValue.type
-      } catch (error) {
-        
+      if (kindOf(ruleValue) === 'string') {
+        ruleType = ruleValue;
+      } else if (ruleValue.__type__) {
+        ruleType = ruleValue.__type__;
+      } else if (ruleValue.type) {
+        ruleType = ruleValue.type;
+      } else {
+        this.errorHandle(false, `The rule for '${paths.join('.')}.${key}' seems to be missing the 'type' or '__type__' option`);
       }
 
       this.verifyRoot(optionValue, ruleValue, paths.concat(key));
-      this.errorHandle(optionType === ruleType, `'${paths.join('.')}.${key}' require '${ruleType}' type, but got '${optionType}'`);
+
+      if (ruleValue.__required__ === true || ruleValue.required === true) {
+        this.pushError(Object.prototype.hasOwnProperty.call(option, key), `'${paths.join('.')}.${key}' is required`);
+      }
+
+      this.pushError(optionType === ruleType, `'${paths.join('.')}.${key}' require '${ruleType}' type, but got '${optionType}'`);
     });
   }
 
@@ -39,9 +55,15 @@ export default class OptionValidator {
     });
   }
 
+  pushError(condition, msg) {
+    if (!condition) {
+      this.errors.push(msg);
+    }
+  }
+
   errorHandle(condition, msg) {
     if (!condition) {
-      this.errorState.push(new TypeError(msg));
+      throw new TypeError(msg);
     }
   }
 }

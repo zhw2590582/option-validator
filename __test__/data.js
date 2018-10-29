@@ -1,6 +1,4 @@
-import optionValidator from '..';
-
-const baseOption = {
+export const baseOption = {
   typeUndefined: undefined,
   typeNull: null,
   typeBoolean: true,
@@ -32,7 +30,7 @@ const baseOption = {
   typeFloat64Array: new Float64Array()
 };
 
-const baseRule = {
+export const baseRule = {
   typeUndefined: 'undefined',
   typeNull: 'null',
   typeBoolean: 'boolean',
@@ -62,36 +60,4 @@ const baseRule = {
   typeUint32Array: 'uint32array',
   typeFloat32Array: 'float32array',
   typeFloat64Array: 'float64array'
-}
-
-test('Shallow object verification', () => {
-  const { errorState } = new optionValidator(baseOption, baseRule);
-  expect(errorState.length).toBe(0);
-});
-
-test('Deep object verification', () => {
-  const baseRuleCopy = Object.assign({}, baseRule, {
-    type: 'object'
-  })
-
-  const deepOption = {
-    level1: {
-      ...baseOption,
-      level2: {
-        ...baseOption
-      }
-    }
-  };
-
-  const deepRule = {
-    level1: {
-      ...baseRuleCopy,
-      level2: {
-        ...baseRuleCopy
-      }
-    }
-  }
-
-  const { errorState } = new optionValidator(deepOption, deepRule);
-  expect(errorState.length).toBe(0);
-});
+};
