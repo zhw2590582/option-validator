@@ -1,37 +1,47 @@
 import kindOf from 'kind-of';
 
-export default function optionValidator(option, rule, paths = ['option']) {
-  const rootType = kindOf(option);
-  if (rootType === 'object') {
-    verifyObject(option, rule, paths);
-  } else if (rootType === 'array') {
-    verifyArray(option, rule, paths);
+export default class OptionValidator {
+  constructor(option, rule, paths = ['option']) {
+    this.errorState = [];
+    this.verifyRoot(option, rule, paths);
   }
-}
 
-function verifyObject(option, rule, paths) {
-  Object.keys(option).forEach(key => {
-    const optionValue = option[key];
-    const optionType = kindOf(optionValue);
-    const ruleValue = rule[key];
-    const ruleType = kindOf(ruleValue) === 'string' ? ruleValue : ruleValue.type;
-    optionValidator(optionValue, ruleValue, paths.concat(key));
-    errorHandle(optionType === ruleType, `'${paths.join('.')}.${key}' require '${ruleType}' type, but got '${optionType}'`);
-  });
-}
+  verifyRoot(option, rule, paths) {
+    const rootType = kindOf(option);
+    if (rootType === 'object') {
+      this.verifyObject(option, rule, paths);
+    } else if (rootType === 'array') {
+      // this.verifyArray(option, rule, paths);
+    }
+  }
 
-function verifyArray(option, rule, paths) {
-  option.forEach((item, index) => {
-    const optionValue = option[key];
-    const optionType = kindOf(optionValue);
-    const ruleValue = rule[key];
-    const ruleType = kindOf(ruleValue) === 'string' ? ruleValue : ruleValue.type;
-    optionValidator(optionValue, ruleValue, paths.concat(`${key}[${index}]`));
-  });
-}
+  verifyObject(option, rule, paths) {
+    Object.keys(option).forEach(key => {
+      const optionValue = option[key];
+      const optionType = kindOf(optionValue);
+      const ruleValue = rule[key];
+      
+      let ruleType;
+      try {
+        ruleType = kindOf(ruleValue) === 'string' ? ruleValue : ruleValue.type
+      } catch (error) {
+        
+      }
 
-function errorHandle(condition, msg) {
-  if (!condition) {
-    throw new TypeError(msg);
+      this.verifyRoot(optionValue, ruleValue, paths.concat(key));
+      this.errorHandle(optionType === ruleType, `'${paths.join('.')}.${key}' require '${ruleType}' type, but got '${optionType}'`);
+    });
+  }
+
+  verifyArray(option, rule, paths) {
+    option.forEach((item, index) => {
+      //
+    });
+  }
+
+  errorHandle(condition, msg) {
+    if (!condition) {
+      this.errorState.push(new TypeError(msg));
+    }
   }
 }

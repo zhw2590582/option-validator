@@ -1,6 +1,6 @@
 import optionValidator from '..';
 
-const optionData = {
+const baseOption = {
   typeUndefined: undefined,
   typeNull: null,
   typeBoolean: true,
@@ -29,47 +29,69 @@ const optionData = {
   typeInt32Array: new Int32Array(),
   typeUint32Array: new Uint32Array(),
   typeFloat32Array: new Float32Array(),
-  typeFloat64Array: new Float64Array(),
-  deepObject1: {
-    typeUndefined: undefined,
-    typeNull: null,
-    typeBoolean: true,
-    typeBoolean2: false,
-    deepObject2: {
-      typeUndefined: undefined,
-      typeNull: null,
-      typeBoolean: true,
-      typeBoolean2: false,
-      deepObject3: {
-        typeUndefined: undefined,
-        typeNull: null,
-        typeBoolean: true,
-        typeBoolean2: false
-      }
-    }
-  },
-  deepArray1: [
-    [
-      [
-        [
-          {
-            typeUndefined: undefined,
-            typeNull: null,
-            typeBoolean: true,
-            typeBoolean2: false
-          }
-        ]
-      ]
-    ]
-  ]
+  typeFloat64Array: new Float64Array()
 };
 
-test('11', () => {
-  const state = optionValidator(optionData, {
-    a: 'string',
-    b: 'number',
-    c: 'boolean',
-    d: 'null'
-  });
-  expect(state).toBe(true);
+const baseRule = {
+  typeUndefined: 'undefined',
+  typeNull: 'null',
+  typeBoolean: 'boolean',
+  typeBoolean2: 'boolean',
+  typeBuffer: 'buffer',
+  typeNumber: 'number',
+  typeString: 'string',
+  typeObject: 'object',
+  typeObject2: 'object',
+  typeDate: 'date',
+  typeArray: 'array',
+  typeRegexp: 'regexp',
+  typeRegexp2: 'regexp',
+  typeError: 'error',
+  typeFunction: 'function',
+  typeGeneratorfunction: 'generatorfunction',
+  typeSymbol: 'symbol',
+  typeMap: 'map',
+  typeWeakMap: 'weakmap',
+  typeSet: 'set',
+  typeWeakSet: 'weakset',
+  typeInt8Array: 'int8array',
+  typeUint8Array: 'uint8array',
+  typeUint8ClampedArray: 'uint8clampedarray',
+  typeUint16Array: 'uint16array',
+  typeInt32Array: 'int32array',
+  typeUint32Array: 'uint32array',
+  typeFloat32Array: 'float32array',
+  typeFloat64Array: 'float64array'
+}
+
+test('Shallow object verification', () => {
+  const { errorState } = new optionValidator(baseOption, baseRule);
+  expect(errorState.length).toBe(0);
+});
+
+test('Deep object verification', () => {
+  const baseRuleCopy = Object.assign({}, baseRule, {
+    type: 'object'
+  })
+
+  const deepOption = {
+    level1: {
+      ...baseOption,
+      level2: {
+        ...baseOption
+      }
+    }
+  };
+
+  const deepRule = {
+    level1: {
+      ...baseRuleCopy,
+      level2: {
+        ...baseRuleCopy
+      }
+    }
+  }
+
+  const { errorState } = new optionValidator(deepOption, deepRule);
+  expect(errorState.length).toBe(0);
 });
