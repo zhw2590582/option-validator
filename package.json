@@ -4,7 +4,7 @@
   "description": "A simple option validator",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "NODE_ENV=test jest"
   },
   "repository": {
     "type": "git",
@@ -21,9 +21,15 @@
   },
   "homepage": "https://github.com/zhw2590582/option-validator#readme",
   "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-jest": "^23.6.0",
+    "babel-preset-env": "^1.7.0",
     "jest": "^23.6.0"
   },
   "dependencies": {
     "kind-of": "^6.0.2"
+  },
+  "engines": {
+    "node": "^9.0.0"
   }
 }
