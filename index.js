@@ -3,29 +3,24 @@ import kindOf from 'kind-of';
 export default class OptionValidator {
   constructor(option, rule, paths = ['option']) {
     this.errors = [];
-    this.verifyRoot(option, rule, paths);
+    this.verifyRule(option, rule, paths);
     this.errors.forEach(msg => {
-      this.errorHandle(false, msg);
+      throw new TypeError(msg);
     });
   }
 
-  verifyRoot(option, rule, paths) {
-    const rootType = kindOf(option);
-    if (rootType === 'object') {
-      this.verifyObject(option, rule, paths);
-    } else if (rootType === 'array') {
-      // this.verifyArray(option, rule, paths);
-    }
-  }
-
-  verifyObject(option, rule, paths) {
+  verifyRule(option, rule, paths) {
     Object.keys(rule).forEach(key => {
       const optionValue = option[key];
       const optionType = kindOf(optionValue);
       const ruleValue = rule[key];
 
-      if (!ruleValue) {
-        return;
+      if (!Object.prototype.hasOwnProperty.call(option, key)) {
+        if (ruleValue.__required__ === true || ruleValue.required === true) {
+          this.errors.push(`'${paths.join('.')}.${key}' is required`);
+        } else {
+          return;
+        }
       }
 
       let ruleType;
@@ -36,34 +31,43 @@ export default class OptionValidator {
       } else if (ruleValue.type) {
         ruleType = ruleValue.type;
       } else {
-        this.errorHandle(false, `The rule for '${paths.join('.')}.${key}' seems to be missing the 'type' or '__type__' option`);
+        throw new TypeError(`The rule for '${paths.join('.')}.${key}' seems to be missing the 'type' or '__type__' option`);
       }
 
-      this.verifyRoot(optionValue, ruleValue, paths.concat(key));
-
-      if (ruleValue.__required__ === true || ruleValue.required === true) {
-        this.pushError(Object.prototype.hasOwnProperty.call(option, key), `'${paths.join('.')}.${key}' is required`);
+      let ruleChild;
+      if (ruleValue.___child__) {
+        ruleChild = ruleValue.___child__;
+      } else if (ruleValue.child) {
+        ruleChild = ruleValue.child;
       }
 
-      this.pushError(optionType === ruleType, `'${paths.join('.')}.${key}' require '${ruleType}' type, but got '${optionType}'`);
+      if (optionType !== ruleType) {
+        this.errors.push(`'${paths.join('.')}.${key}' require '${ruleType}' type, but got '${optionType}'`);
+      }
+
+      let ruleValidator;
+      if (ruleValue.___validator__) {
+        ruleValidator = ruleValue.___validator__;
+      } else if (ruleValue.validator) {
+        ruleValidator = ruleValue.validator;
+      }
+
+      if (kindOf(ruleValidator) === 'function') {
+        const resule = ruleValidator(paths.concat(key), optionValue, optionType);
+        if (resule !== true) {
+          this.errors.push(`The rule for '${paths.join('.')}.${key}' validator function require return true, but got '${resule}'`);
+        }
+      }
+
+      if (kindOf(ruleChild) === 'object') {
+        if (ruleType === 'object') {
+          this.verifyRule(optionValue, ruleChild, paths.concat(key));
+        } else if (ruleType === 'array') {
+          optionValue.forEach((item, index) => {
+            this.verifyRule(item, ruleChild, paths.concat(`${key}[${index}]`));
+          });
+        }
+      }
     });
-  }
-
-  verifyArray(option, rule, paths) {
-    option.forEach((item, index) => {
-      //
-    });
-  }
-
-  pushError(condition, msg) {
-    if (!condition) {
-      this.errors.push(msg);
-    }
-  }
-
-  errorHandle(condition, msg) {
-    if (!condition) {
-      throw new TypeError(msg);
-    }
   }
 }
