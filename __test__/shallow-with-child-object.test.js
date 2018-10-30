@@ -16,6 +16,5 @@ test('Shallow with child object', () => {
     ...baseOption
   }
 
-  const { errors } = new optionValidator(baseOptionCopy, baseRuleCopy);
-  expect(errors.length).toBe(0);
+  new optionValidator(baseOptionCopy, baseRuleCopy);
 });

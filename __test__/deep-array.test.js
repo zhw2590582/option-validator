@@ -24,6 +24,5 @@ test('Deep array', () => {
     }
   }
 
-  const { errors } = new optionValidator(deepOption, deepRule);
-  expect(errors.length).toBe(0);
+  new optionValidator(deepOption, deepRule);
 });

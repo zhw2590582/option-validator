@@ -76,9 +76,7 @@ const rule = {
   typeFloat64Array: 'float64array'
 }
 
-const errors = new OptionValidator(option, rule);
-
-console.log(errors);
+OptionValidator(option, rule);
 
 ```
 
