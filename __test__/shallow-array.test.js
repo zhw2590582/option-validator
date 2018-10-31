@@ -13,3 +13,12 @@ test('Shallow array and child', () => {
     child: scheme
   });
 });
+
+test('Shallow array and child with number', () => {
+  optionValidator([1, 2, 3], {
+    type: 'array',
+    child: {
+      type: 'number'
+    }
+  });
+});

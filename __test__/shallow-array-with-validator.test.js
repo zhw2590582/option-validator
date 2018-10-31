@@ -73,3 +73,14 @@ test('Shallow array with scheme validator and option without validator', () => {
     }
   });
 });
+
+test('Shallow array with scheme validator and option without validator 2', () => {
+  optionValidator([1, 2, 3], {
+    type: 'array',
+    child: {
+      validator: (paths, value, type) => {
+        return paths[paths.length - 1] + 1 === value;
+      }
+    }
+  });
+});

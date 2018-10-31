@@ -1,18 +1,6 @@
 import kindOf from 'kind-of';
 
 export default function optionValidator(option, scheme, paths = ['option']) {
-  const optionType = kindOf(option);
-  const schemeType = kindOf(scheme);
-  const pathsType = kindOf(paths);
-
-  if (optionType !== 'object' && optionType !== 'array') {
-    throw new TypeError(`'option' only support object or array type, but got '${optionType}'`);
-  } else if (schemeType !== 'object') {
-    throw new TypeError(`'scheme' only support object type, but got '${schemeType}'`);
-  } else if (pathsType !== 'array') {
-    throw new TypeError(`'paths' only support array type, but got '${pathsType}'`);
-  }
-
   checkType(option, scheme, paths);
   checkValidator(option, scheme, paths);
   checkChild(option, scheme, paths);
@@ -90,7 +78,7 @@ function checkChild(optionValue, schemeValue, paths) {
       optionValidator(optionValue, schemeChild, paths);
     } else if (optionType === 'array') {
       optionValue.forEach((item, index) => {
-        optionValidator(item, schemeChild, paths.concat(`[${index}]`));
+        optionValidator(item, schemeChild, paths.concat(index));
       });
     }
   }

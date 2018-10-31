@@ -10,7 +10,7 @@ $ npm install option-validator
 ## Usage
 
 ```js
-import OptionValidator from 'option-validator';
+import optionValidator from 'option-validator';
 
 const option = {
   typeUndefined: undefined,
@@ -44,7 +44,7 @@ const option = {
   typeFloat64Array: new Float64Array()
 }
 
-const rule = {
+const scheme = {
   typeUndefined: 'undefined',
   typeNull: 'null',
   typeBoolean: 'boolean',
@@ -76,7 +76,7 @@ const rule = {
   typeFloat64Array: 'float64array'
 }
 
-OptionValidator(option, rule);
+optionValidator(option, scheme);
 
 ```
 
