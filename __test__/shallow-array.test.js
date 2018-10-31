@@ -1,12 +1,15 @@
 import optionValidator from '..';
-import { baseOption, baseRule} from './data';
+import { option, scheme} from './testData';
 
 test('Shallow array', () => {
-  const baseRuleCopy = {
+  optionValidator([option], {
     type: 'array'
-  };
+  });
+});
 
-  const baseOptionCopy = [baseOption];
-
-  new optionValidator(baseOptionCopy, baseRuleCopy);
+test('Shallow array and child', () => {
+  optionValidator([option], {
+    type: 'array',
+    child: scheme
+  });
 });

@@ -1,4 +1,4 @@
-export const baseOption = {
+export const option = {
   typeUndefined: undefined,
   typeNull: null,
   typeBoolean: true,
@@ -14,7 +14,7 @@ export const baseOption = {
   typeRegexp2: new RegExp('foo'),
   typeError: new Error('error'),
   typeFunction: function() {},
-  typeGeneratorfunction: function*() {},
+  typeGeneratorfunction: function * () {},
   typeSymbol: Symbol('str'),
   typeMap: new Map(),
   typeWeakMap: new WeakMap(),
@@ -30,7 +30,7 @@ export const baseOption = {
   typeFloat64Array: new Float64Array()
 };
 
-export const baseRule = {
+export const scheme = {
   typeUndefined: 'undefined',
   typeNull: 'null',
   typeBoolean: 'boolean',

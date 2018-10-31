@@ -12,6 +12,11 @@
     "window": false
   },
 
+  
+  "parserOptions": {
+    "sourceType": "module"
+  },
+
   "rules": {
     "accessor-pairs": 2,
     "arrow-spacing": [2, { "before": true, "after": true }],

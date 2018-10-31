@@ -1,6 +1,6 @@
 import optionValidator from '..';
-import { baseOption, baseRule} from './data';
+import { option, scheme} from './testData';
 
 test('Shallow object', () => {
-  new optionValidator(baseOption, baseRule);
+  optionValidator(option, scheme);
 });
