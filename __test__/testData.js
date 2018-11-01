@@ -1,4 +1,4 @@
-export const option = {
+exports.option = {
   typeUndefined: undefined,
   typeNull: null,
   typeBoolean: true,
@@ -30,7 +30,7 @@ export const option = {
   typeFloat64Array: new Float64Array()
 };
 
-export const scheme = {
+exports.scheme = {
   typeUndefined: 'undefined',
   typeNull: 'null',
   typeBoolean: 'boolean',
