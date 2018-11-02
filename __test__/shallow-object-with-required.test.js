@@ -1,4 +1,4 @@
-import optionValidator from '..';
+import optionValidator from '../index';
 
 test('Shallow object with scheme required', () => {
   expect(() => {

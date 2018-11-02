@@ -1,6 +1,6 @@
 {
   "name": "option-validator",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "A simple option validator",
   "main": "dist/option-validator.js",
   "scripts": {

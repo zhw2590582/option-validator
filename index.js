@@ -41,7 +41,13 @@ function checkType(optionValue, schemeValue, paths) {
   if (schemeType && kindOf(schemeType) === 'string') {
     schemeType = schemeType.trim().toLowerCase();
     const optionType = kindOf(optionValue);
-    if (optionType !== schemeType) {
+    let resule = optionType === schemeType;
+    if (schemeType.indexOf('|') > -1) {
+      const schemeTypes = schemeType.split('|');
+      resule = schemeTypes.some(item => optionType === item);
+    }
+
+    if (!resule) {
       throw new TypeError(`'${paths.join('.')}' require '${schemeType}' type, but got '${optionType}'`);
     }
   }
