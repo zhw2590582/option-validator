@@ -1,6 +1,6 @@
 import kindOf from 'kind-of';
 
-export default function optionValidator(option, scheme, paths = ['option']) {
+function optionValidator(option, scheme, paths = ['option']) {
   checkType(option, scheme, paths);
   checkValidator(option, scheme, paths);
   checkChild(option, scheme, paths);
@@ -90,3 +90,6 @@ function checkChild(optionValue, schemeValue, paths) {
   }
 }
 
+optionValidator.kindOf = kindOf;
+window.optionValidator = optionValidator;
+export default optionValidator;

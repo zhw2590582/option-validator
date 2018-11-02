@@ -1,4 +1,5 @@
 # option-validator
+
 > A simple option validator
 
 ## Install
@@ -11,7 +12,17 @@ $ npm install option-validator
 
 ```js
 import optionValidator from 'option-validator';
+```
 
+OR umd builds are also available
+
+```html
+<script src="path/to/option-validator.js"></script>
+```
+
+#### Support types
+
+```js
 const option = {
   typeUndefined: undefined,
   typeNull: null,
@@ -42,7 +53,7 @@ const option = {
   typeUint32Array: new Uint32Array(),
   typeFloat32Array: new Float32Array(),
   typeFloat64Array: new Float64Array()
-}
+};
 
 const scheme = {
   typeUndefined: 'undefined',
@@ -74,10 +85,131 @@ const scheme = {
   typeUint32Array: 'uint32array',
   typeFloat32Array: 'float32array',
   typeFloat64Array: 'float64array'
-}
+};
 
 optionValidator(option, scheme);
+```
 
+#### Multiple types
+
+```js
+optionValidator(
+  {
+    numberOrString: 42,
+    stringOrArray: ['1', '2', '3']
+  },
+  {
+    numberOrString: 'number|string',
+    stringOrArray: 'string|array'
+  }
+);
+```
+
+#### Scheme type
+
+```js
+optionValidator(
+  {
+    typeNumber: 42,
+    typeString: 'str',
+    typeObject: {},
+    typeArray: [1, 2, 3]
+  },
+  {
+    typeNumber: {
+      type: 'number'
+    },
+    typeString: {
+      type: 'string'
+    },
+    typeObject: {
+      type: 'object'
+    },
+    typeArray: {
+      type: 'array'
+    }
+  }
+);
+```
+
+#### Scheme validator
+
+```js
+optionValidator(
+  {
+    typeNumber: 42,
+    typeString: 'str',
+    typeObject: {},
+    typeArray: [1, 2, 3]
+  },
+  {
+    typeNumber: {
+      type: 'number',
+      validator: (paths, value, type) => {
+        return value === 42;
+      }
+    },
+    typeString: {
+      type: 'string',
+      validator: (paths, value, type) => {
+        return value.length === 3;
+      }
+    },
+    typeObject: {
+      type: 'object',
+      validator: (paths, value, type) => {
+        return Object.keys(value).length === 0;
+      }
+    },
+    typeArray: {
+      type: 'array',
+      validator: (paths, value, type) => {
+        return value.length === 3;
+      }
+    }
+  }
+);
+```
+
+#### Scheme required
+
+```js
+optionValidator(
+  {
+    typeNumber: 42
+  },
+  {
+    typeNumber: {
+      required: true
+    }
+  }
+);
+```
+
+#### Scheme child
+
+```js
+optionValidator([1, 2, 3], {
+  type: 'array',
+  child: {
+    type: 'number'
+  }
+});
+
+optionValidator({
+  typeObject: {
+    typeNumber: 42,
+    typeString: 'str',
+    typeArray: [1, 2, 3]
+  }
+}, {
+  type: 'object',
+  child: {
+    typeNumber: 'number',
+    typeString: 'string',
+    typeArray: 'array'
+  }
+});
 ```
 
 ## License
