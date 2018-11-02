@@ -196,20 +196,23 @@ optionValidator([1, 2, 3], {
   }
 });
 
-optionValidator({
-  typeObject: {
+optionValidator(
+  {
     typeNumber: 42,
     typeString: 'str',
+    typeObject: {},
     typeArray: [1, 2, 3]
+  },
+  {
+    type: 'object',
+    child: {
+      typeNumber: 'number',
+      typeString: 'string',
+      typeObject: 'object',
+      typeArray: 'array'
+    }
   }
-}, {
-  type: 'object',
-  child: {
-    typeNumber: 'number',
-    typeString: 'string',
-    typeArray: 'array'
-  }
-});
+);
 ```
 
 ## License

@@ -44,7 +44,7 @@ function checkType(optionValue, schemeValue, paths) {
     let resule = optionType === schemeType;
     if (schemeType.indexOf('|') > -1) {
       const schemeTypes = schemeType.split('|');
-      resule = schemeTypes.some(item => optionType === item.trim());
+      resule = schemeTypes.filter(Boolean).some(item => optionType === item.trim());
     }
 
     if (!resule) {
