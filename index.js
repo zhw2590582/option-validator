@@ -32,6 +32,8 @@ function checkType(optionValue, schemeValue, paths) {
   let schemeType;
   if (kindOf(schemeValue) === 'string') {
     schemeType = schemeValue;
+  } else if (kindOf(schemeValue) === 'function') {
+    schemeValue.___validator__ = schemeValue;
   } else if (schemeValue.__type__) {
     schemeType = schemeValue.__type__;
   } else if (schemeValue.type) {

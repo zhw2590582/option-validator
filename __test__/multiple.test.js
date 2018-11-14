@@ -1,6 +1,6 @@
 import optionValidator from '../index';
 
-test('Multiple.test', () => {
+test('Multiple', () => {
   optionValidator(
     {
       numberOrString: 42,
