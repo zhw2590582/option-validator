@@ -43,13 +43,13 @@ function checkType(optionValue, schemeValue, paths) {
   if (schemeType && kindOf(schemeType) === 'string') {
     schemeType = schemeType.trim().toLowerCase();
     const optionType = kindOf(optionValue);
-    let resule = optionType === schemeType;
+    let result = optionType === schemeType;
     if (schemeType.indexOf('|') > -1) {
       const schemeTypes = schemeType.split('|');
-      resule = schemeTypes.filter(Boolean).some(item => optionType === item.trim());
+      result = schemeTypes.filter(Boolean).some(item => optionType === item.trim());
     }
 
-    if (!resule) {
+    if (!result) {
       throw new TypeError(`'${paths.join('.')}' require '${schemeType}' type, but got '${optionType}'`);
     }
   }
@@ -65,9 +65,9 @@ function checkValidator(optionValue, schemeValue, paths) {
 
   if (kindOf(schemeValidator) === 'function') {
     const optionType = kindOf(optionValue);
-    const resule = schemeValidator(paths, optionValue, optionType);
-    if (resule !== true) {
-      throw new TypeError(`The scheme for '${paths.join('.')}' validator function require return true, but got '${resule}'`);
+    const result = schemeValidator(paths, optionValue, optionType);
+    if (result !== true) {
+      throw new TypeError(`The scheme for '${paths.join('.')}' validator function require return true, but got '${result}'`);
     }
   }
 }
