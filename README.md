@@ -163,25 +163,25 @@ optionValidator(
   {
     typeNumber: {
       type: 'number',
-      validator: (paths, value, type) => {
+      validator: (value, type, paths) => {
         return value === 42;
       }
     },
     typeString: {
       type: 'string',
-      validator: (paths, value, type) => {
+      validator: (value, type, paths) => {
         return value.length === 3;
       }
     },
     typeObject: {
       type: 'object',
-      validator: (paths, value, type) => {
+      validator: (value, type, paths) => {
         return Object.keys(value).length === 0;
       }
     },
     typeArray: {
       type: 'array',
-      validator: (paths, value, type) => {
+      validator: (value, type, paths) => {
         return value.length === 3;
       }
     }
