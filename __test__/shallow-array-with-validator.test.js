@@ -11,25 +11,25 @@ test('Shallow array with scheme validator', () => {
     child: {
       typeNumber: {
         type: 'number',
-        validator: (paths, value, type) => {
+        validator: (value, type, paths) => {
           return value === 42;
         }
       },
       typeString: {
         type: 'string',
-        validator: (paths, value, type) => {
+        validator: (value, type, paths) => {
           return value.length === 3;
         }
       },
       typeObject: {
         type: 'object',
-        validator: (paths, value, type) => {
+        validator: (value, type, paths) => {
           return Object.keys(value).length === 0;
         }
       },
       typeArray: {
         type: 'array',
-        validator: (paths, value, type) => {
+        validator: (value, type, paths) => {
           return value.length === 3;
         }
       }
@@ -45,12 +45,12 @@ test('Shallow array with scheme validator and option validator', () => {
     type: 'array',
     child: {
       validator: {
-        validator: (paths, value, type) => {
+        validator: (value, type, paths) => {
           return value === 42;
         }
       },
       __validator__: {
-        validator: (paths, value, type) => {
+        validator: (value, type, paths) => {
           return value.length === 3;
         }
       }
@@ -67,7 +67,7 @@ test('Shallow array with scheme validator and option without validator', () => {
   }], {
     type: 'array',
     child: {
-      validator: (paths, value, type) => {
+      validator: (value, type, paths) => {
         return Object.keys(value).length === 4;
       }
     }
@@ -78,7 +78,7 @@ test('Shallow array with scheme validator and option without validator 2', () =>
   optionValidator([1, 2, 3], {
     type: 'array',
     child: {
-      validator: (paths, value, type) => {
+      validator: (value, type, paths) => {
         return paths[paths.length - 1] + 1 === value;
       }
     }

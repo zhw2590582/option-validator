@@ -7,10 +7,10 @@ test('Function as type', () => {
       stringOrArray: ['1', '2', '3']
     },
     {
-      numberOrString: (paths, value, type) => {
+      numberOrString: (value, type, paths) => {
         return value === 42;
       },
-      stringOrArray: (paths, value, type) => {
+      stringOrArray: (value, type, paths) => {
         return value.length === 3;
       }
     }

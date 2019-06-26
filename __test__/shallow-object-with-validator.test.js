@@ -9,25 +9,25 @@ test('Shallow object with scheme validator', () => {
   }, {
     typeNumber: {
       type: 'number',
-      validator: (paths, value, type) => {
+      validator: (value, type, paths) => {
         return value === 42;
       }
     },
     typeString: {
       type: 'string',
-      validator: (paths, value, type) => {
+      validator: (value, type, paths) => {
         return value.length === 3;
       }
     },
     typeObject: {
       type: 'object',
-      validator: (paths, value, type) => {
+      validator: (value, type, paths) => {
         return Object.keys(value).length === 0;
       }
     },
     typeArray: {
       type: 'array',
-      validator: (paths, value, type) => {
+      validator: (value, type, paths) => {
         return value.length === 3;
       }
     }
@@ -40,12 +40,12 @@ test('Shallow object with scheme validator and option validator', () => {
     __validator__: 'str'
   }, {
     validator: {
-      validator: (paths, value, type) => {
+      validator: (value, type, paths) => {
         return value === 42;
       }
     },
     __validator__: {
-      validator: (paths, value, type) => {
+      validator: (value, type, paths) => {
         return value.length === 3;
       }
     }
@@ -59,7 +59,7 @@ test('Shallow object with scheme validator and option without validator', () => 
     typeObject: {},
     typeArray: [1, 2, 3]
   }, {
-    validator: (paths, value, type) => {
+    validator: (value, type, paths) => {
       return Object.keys(value).length === 4;
     }
   });

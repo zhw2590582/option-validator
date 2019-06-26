@@ -6,7 +6,7 @@ function optionValidator(option, scheme, paths = ['option']) {
   checkChild(option, scheme, paths);
 
   for (const key in scheme) {
-    if (scheme.hasOwnProperty(key)) {
+    if (Object.prototype.hasOwnProperty.call(scheme, key)) {
       const optionValue = option[key];
       const schemeValue = scheme[key];
       const currentPath = paths.concat(key);
@@ -65,7 +65,7 @@ function checkValidator(optionValue, schemeValue, paths) {
 
   if (kindOf(schemeValidator) === 'function') {
     const optionType = kindOf(optionValue);
-    const result = schemeValidator(paths, optionValue, optionType);
+    const result = schemeValidator(optionValue, optionType, paths);
     if (result !== true) {
       throw new TypeError(`The scheme for '${paths.join('.')}' validator function require return true, but got '${result}'`);
     }
