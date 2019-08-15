@@ -16,6 +16,8 @@ function optionValidator(option, scheme, paths = ['option']) {
       checkChild(optionValue, schemeValue, currentPath);
     }
   }
+
+  return option;
 }
 
 function checkRequired(option, key, schemeValue, paths) {
@@ -93,5 +95,4 @@ function checkChild(optionValue, schemeValue, paths) {
 }
 
 optionValidator.kindOf = kindOf;
-window.optionValidator = optionValidator;
 export default optionValidator;
