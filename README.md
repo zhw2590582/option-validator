@@ -1,6 +1,6 @@
 # option-validator
 
-[![Build Status](https://www.travis-ci.org/zhw2590582/option-validator.svg?branch=master)](https://www.travis-ci.org/zhw2590582/option-validator)
+[![Build Status](https://travis-ci.com/zhw2590582/option-validator.svg?branch=master)](https://travis-ci.com/zhw2590582/option-validator)
 ![version](https://badgen.net/npm/v/option-validator)
 ![license](https://badgen.net/npm/license/option-validator)
 ![size](https://badgen.net/bundlephobia/minzip/option-validator)
