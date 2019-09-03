@@ -45,6 +45,8 @@ const option = {
   g: {
     h: new Error('error'),
   },
+  i: [1, '2', () => 3],
+  j: [1, 2, 3, 4, 5, 6],
 };
 
 const scheme = {
@@ -69,6 +71,10 @@ const scheme = {
       return type === 'error';
     },
   },
+  i: ['number', 'string', 'function'],
+
+  // If there is no corresponding validator, the first one is taken by default.
+  j: ['number'],
 };
 
 optionValidator(option, scheme);
