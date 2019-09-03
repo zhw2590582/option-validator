@@ -1,5 +1,12 @@
 # option-validator
 
+[![Build Status](https://travis-ci.com/zhw2590582/option-validator.svg?branch=master)](https://travis-ci.com/zhw2590582/option-validator)
+![version](https://badgen.net/npm/v/option-validator)
+![license](https://badgen.net/npm/license/option-validator)
+![size](https://badgen.net/bundlephobia/minzip/option-validator)
+[![npm Downloads](https://img.shields.io/npm/dt/option-validator.svg)](https://www.npmjs.com/package/option-validator)
+[![dependencies Status](https://david-dm.org/zhw2590582/option-validator/status.svg)](https://david-dm.org/zhw2590582/option-validator)
+
 > A simple option validator
 
 ## Install
@@ -7,8 +14,6 @@
 ```
 $ npm install option-validator
 ```
-
-## Usage
 
 ```js
 import optionValidator from 'option-validator';
@@ -20,219 +25,55 @@ OR umd builds are also available
 <script src="path/to/option-validator.js"></script>
 ```
 
-#### Support types
+Will expose the global variable to `window.optionValidator`.
+
+## Usage
+
+- Only one api is to receive a option object and a scheme.
+- If the verification is passed, the original option object will be returned.
+- If the verification fails, an exception will be thrown.
+- Support all js type detection [JS Types](./__test__/testData.js)
+- Support for custom validator functions
 
 ```js
 const option = {
-  typeUndefined: undefined,
-  typeNull: null,
-  typeBoolean: true,
-  typeBoolean2: false,
-  typeBuffer: new Buffer(''),
-  typeNumber: 42,
-  typeString: 'str',
-  typeObject: {},
-  typeObject2: Object.create(null),
-  typeDate: new Date(),
-  typeArray: [1, 2, 3],
-  typeRegexp: /foo/,
-  typeRegexp2: new RegExp('foo'),
-  typeError: new Error('error'),
-  typeFunction: function() {},
-  typeGeneratorfunction: function*() {},
-  typeSymbol: Symbol('str'),
-  typeMap: new Map(),
-  typeWeakMap: new WeakMap(),
-  typeSet: new Set(),
-  typeWeakSet: new WeakSet(),
-  typeInt8Array: new Int8Array(),
-  typeUint8Array: new Uint8Array(),
-  typeUint8ClampedArray: new Uint8ClampedArray(),
-  typeUint16Array: new Uint16Array(),
-  typeInt32Array: new Int32Array(),
-  typeUint32Array: new Uint32Array(),
-  typeFloat32Array: new Float32Array(),
-  typeFloat64Array: new Float64Array()
+  a: 1,
+  b: '2',
+  c: {
+    d: () => null,
+  },
+  g: {
+    h: new Error('error'),
+  },
 };
 
 const scheme = {
-  typeUndefined: 'undefined',
-  typeNull: 'null',
-  typeBoolean: 'boolean',
-  typeBoolean2: 'boolean',
-  typeBuffer: 'buffer',
-  typeNumber: 'number',
-  typeString: 'string',
-  typeObject: 'object',
-  typeObject2: 'object',
-  typeDate: 'date',
-  typeArray: 'array',
-  typeRegexp: 'regexp',
-  typeRegexp2: 'regexp',
-  typeError: 'error',
-  typeFunction: 'function',
-  typeGeneratorfunction: 'generatorfunction',
-  typeSymbol: 'symbol',
-  typeMap: 'map',
-  typeWeakMap: 'weakmap',
-  typeSet: 'set',
-  typeWeakSet: 'weakset',
-  typeInt8Array: 'int8array',
-  typeUint8Array: 'uint8array',
-  typeUint8ClampedArray: 'uint8clampedarray',
-  typeUint16Array: 'uint16array',
-  typeInt32Array: 'int32array',
-  typeUint32Array: 'uint32array',
-  typeFloat32Array: 'float32array',
-  typeFloat64Array: 'float64array'
+  a: 'number',
+  b: 'string',
+  c: {
+    d: 'function',
+  },
+  g: {
+    h: (value, type, path) => {
+      // value --> new Error('error')
+      // type --> error
+      // path --> ['option', 'g', 'h']
+
+      // Returns string mean validation failed, and the string will thrown
+      return 'I will throw an exception';
+
+      // Returns error also mean validation failed, and the error will thrown
+      return new Error('I will throw an exception');
+
+      // Returns true mean verification passed
+      return type === 'error';
+    },
+  },
 };
 
 optionValidator(option, scheme);
 ```
 
-#### Multiple types
-
-```js
-optionValidator(
-  {
-    numberOrString: 42,
-    stringOrArray: ['1', '2', '3']
-  },
-  {
-    numberOrString: 'number|string',
-    stringOrArray: 'string|array'
-  }
-);
-```
-#### Function as type
-
-```js
-optionValidator(
-  {
-    numberOrString: 42,
-    stringOrArray: ['1', '2', '3']
-  },
-  {
-    numberOrString: (value, type, paths) => {
-      return value === 42;
-    },
-    stringOrArray: (value, type, paths) => {
-      return value.length === 3;
-    }
-  }
-);
-```
-
-#### Scheme type
-
-```js
-optionValidator(
-  {
-    typeNumber: 42,
-    typeString: 'str',
-    typeObject: {},
-    typeArray: [1, 2, 3]
-  },
-  {
-    typeNumber: {
-      type: 'number'
-    },
-    typeString: {
-      type: 'string'
-    },
-    typeObject: {
-      type: 'object'
-    },
-    typeArray: {
-      type: 'array'
-    }
-  }
-);
-```
-
-#### Scheme validator
-
-```js
-optionValidator(
-  {
-    typeNumber: 42,
-    typeString: 'str',
-    typeObject: {},
-    typeArray: [1, 2, 3]
-  },
-  {
-    typeNumber: {
-      type: 'number',
-      validator: (value, type, paths) => {
-        return value === 42;
-      }
-    },
-    typeString: {
-      type: 'string',
-      validator: (value, type, paths) => {
-        return value.length === 3;
-      }
-    },
-    typeObject: {
-      type: 'object',
-      validator: (value, type, paths) => {
-        return Object.keys(value).length === 0;
-      }
-    },
-    typeArray: {
-      type: 'array',
-      validator: (value, type, paths) => {
-        return value.length === 3;
-      }
-    }
-  }
-);
-```
-
-#### Scheme required
-
-```js
-optionValidator(
-  {
-    typeNumber: 42
-  },
-  {
-    typeNumber: {
-      required: true
-    }
-  }
-);
-```
-
-#### Scheme child
-
-```js
-optionValidator([1, 2, 3], {
-  type: 'array',
-  child: {
-    type: 'number'
-  }
-});
-
-optionValidator(
-  {
-    typeNumber: 42,
-    typeString: 'str',
-    typeObject: {},
-    typeArray: [1, 2, 3]
-  },
-  {
-    type: 'object',
-    child: {
-      typeNumber: 'number',
-      typeString: 'string',
-      typeObject: 'object',
-      typeArray: 'array'
-    }
-  }
-);
-```
-
 ## License
 
-MIT © [Harvey Zack](https://www.zhw-island.com/)
+MIT © [Harvey Zack](https://sleepy.im/)
