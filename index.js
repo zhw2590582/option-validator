@@ -42,8 +42,9 @@ function checkType(option, scheme, paths) {
   if (scheme.indexOf('|') > -1) {
     result = scheme
       .split('|')
+      .map(item => item.toLowerCase().trim())
       .filter(Boolean)
-      .some(item => optionType === item.toLowerCase().trim());
+      .some(item => optionType === item);
   } else {
     result = scheme.toLowerCase().trim() === optionType;
   }
