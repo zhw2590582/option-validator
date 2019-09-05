@@ -58,7 +58,7 @@ const scheme = {
   g: {
     h: (value, type, path) => {
       // value --> new Error('error')
-      // type --> error
+      // type --> 'error'
       // path --> ['option', 'g', 'h']
 
       // Returns string mean validation failed, and the string will thrown
