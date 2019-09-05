@@ -47,14 +47,20 @@ const option = {
   },
   i: [1, '2', () => 3],
   j: [1, 2, 3, 4, 5, 6],
+  k: '123456',
 };
 
 const scheme = {
+  // Shallow verification
   a: 'number',
   b: 'string',
+
+  // Deep verification
   c: {
     d: 'function',
   },
+
+  // Validator functions
   g: {
     h: (value, type, path) => {
       // value --> new Error('error')
@@ -71,10 +77,15 @@ const scheme = {
       return type === 'error';
     },
   },
+
+  // Verify array elements
   i: ['number', 'string', 'function'],
 
   // If there is no corresponding validator, the first one is taken by default.
   j: ['number'],
+
+  // Verify one of them
+  k: 'number|string',
 };
 
 optionValidator(option, scheme);
