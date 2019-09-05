@@ -1,20 +1,15 @@
 import kindOf from 'kind-of';
 
-const TYPE = Symbol('TYPE');
-const VALIDATOR = Symbol('VALIDATOR');
-
 function optionValidator(option, scheme, paths = ['option']) {
-  scheme = formatScheme(scheme);
   checkType(option, scheme, paths);
   checkValidator(option, scheme, paths);
   checkChild(option, scheme, paths);
   return option;
 }
 
-export function checkChild(option, scheme, paths) {
+function checkChild(option, scheme, paths) {
   const schemeType = kindOf(scheme);
   const optionType = kindOf(option);
-
   if (schemeType === 'object' && optionType === 'object') {
     Object.keys(scheme).forEach(key => {
       const childOption = option[key];
@@ -40,41 +35,27 @@ export function checkChild(option, scheme, paths) {
   }
 }
 
-export function formatScheme(scheme) {
-  const schemeType = kindOf(scheme);
-  if (schemeType === 'string') {
-    return {
-      [TYPE]: scheme.trim().toLowerCase(),
-    };
-  } else if (schemeType === 'function') {
-    return {
-      [VALIDATOR]: scheme,
-    };
-  } else {
-    return scheme;
-  }
-}
-
-export function checkType(option, scheme, paths) {
-  if (kindOf(scheme[TYPE]) !== 'string') return;
+function checkType(option, scheme, paths) {
+  if (kindOf(scheme) !== 'string') return;
   const optionType = kindOf(option);
   let result = false;
-  if (scheme[TYPE].indexOf('|') > -1) {
-    result = scheme[TYPE].split('|')
+  if (scheme.indexOf('|') > -1) {
+    result = scheme
+      .split('|')
       .filter(Boolean)
-      .some(item => optionType === item.trim());
+      .some(item => optionType === item.toLowerCase().trim());
   } else {
-    result = scheme[TYPE] === optionType;
+    result = scheme.toLowerCase().trim() === optionType;
   }
   if (!result) {
-    throw new Error(`[Type Error]: '${paths.join('.')}' require '${scheme[TYPE]}' type, but got '${optionType}'`);
+    throw new Error(`[Type Error]: '${paths.join('.')}' require '${scheme}' type, but got '${optionType}'`);
   }
 }
 
-export function checkValidator(option, scheme, paths) {
-  if (kindOf(scheme[VALIDATOR]) !== 'function') return;
+function checkValidator(option, scheme, paths) {
+  if (kindOf(scheme) !== 'function') return;
   const optionType = kindOf(option);
-  const result = scheme[VALIDATOR](option, optionType, paths);
+  const result = scheme(option, optionType, paths);
   if (result === true) return;
   const resultType = kindOf(result);
   if (resultType === 'string') {
