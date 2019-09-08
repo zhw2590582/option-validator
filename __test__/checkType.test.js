@@ -10,129 +10,177 @@ test('Check Type Shallow', () => {
 });
 
 test('Check Type Child', () => {
-  optionValidator({
-    a: 1
-  }, {
-    a: 'number'
-  })
+  optionValidator(
+    {
+      a: 1,
+    },
+    {
+      a: 'number',
+    },
+  );
 
   expect(() => {
-    optionValidator({
-      // a: 1
-    }, {
-      a: 'number'
-    })
+    optionValidator(
+      {
+        // a: 1
+      },
+      {
+        a: 'number',
+      },
+    );
   }).toThrowError(/Type Error/);
 });
 
 test('Check Type Child Multiple', () => {
-  optionValidator({
-    a: 1
-  }, {
-    a: 'number|string'
-  })
+  optionValidator(
+    {
+      a: 1,
+    },
+    {
+      a: 'number|string',
+    },
+  );
 
   expect(() => {
-    optionValidator({
-      a: () => null
-    }, {
-      a: 'number|string'
-    })
+    optionValidator(
+      {
+        a: () => null,
+      },
+      {
+        a: 'number|string',
+      },
+    );
   }).toThrowError(/Type Error/);
 });
 
 test('Check Type Child Deep', () => {
-  optionValidator({
-    a: {
-      b: {
-        c: 123,
-        d: 'test',
-        e: {
-          f: () => null
-        }
-      }
-    }
-  }, {
-    a: {
-      b: {
-        c: 'number',
-        d: 'string',
-        e: {
-          f: 'function'
-        }
-      }
-    }
-  })
-
-  expect(() => {
-    optionValidator({
+  optionValidator(
+    {
       a: {
         b: {
           c: 123,
           d: 'test',
           e: {
-            // f: () => null
-          }
-        }
-      }
-    }, {
+            f: () => null,
+          },
+        },
+      },
+    },
+    {
       a: {
         b: {
           c: 'number',
           d: 'string',
           e: {
-            f: 'function'
-          }
-        }
-      }
-    })
+            f: 'function',
+          },
+        },
+      },
+    },
+  );
+
+  expect(() => {
+    optionValidator(
+      {
+        a: {
+          b: {
+            c: 123,
+            d: 'test',
+            e: {
+              // f: () => null
+            },
+          },
+        },
+      },
+      {
+        a: {
+          b: {
+            c: 'number',
+            d: 'string',
+            e: {
+              f: 'function',
+            },
+          },
+        },
+      },
+    );
   }).toThrowError(/Type Error/);
 });
 
 test('Check Type Child Deep Array', () => {
-  optionValidator({
-    a: {
-      b: {
-        c: 123,
-        d: 'test',
-        e: {
-          f: [1, '2', () => null]
-        }
-      }
-    }
-  }, {
-    a: {
-      b: {
-        c: 'number',
-        d: 'string',
-        e: {
-          f: ['number', 'string', 'function']
-        }
-      }
-    }
-  })
-
-  expect(() => {
-    optionValidator({
+  optionValidator(
+    {
       a: {
         b: {
           c: 123,
           d: 'test',
           e: {
-            f: [1, 2, () => null]
-          }
-        }
-      }
-    }, {
+            f: [1, '2', () => null],
+          },
+        },
+      },
+    },
+    {
       a: {
         b: {
           c: 'number',
           d: 'string',
           e: {
-            f: ['number', 'string', 'function']
-          }
-        }
-      }
-    })
+            f: ['number', 'string', 'function'],
+          },
+        },
+      },
+    },
+  );
+
+  expect(() => {
+    optionValidator(
+      {
+        a: {
+          b: {
+            c: 123,
+            d: 'test',
+            e: {
+              f: [1, 2, () => null],
+            },
+          },
+        },
+      },
+      {
+        a: {
+          b: {
+            c: 'number',
+            d: 'string',
+            e: {
+              f: ['number', 'string', 'function'],
+            },
+          },
+        },
+      },
+    );
+  }).toThrowError(/Type Error/);
+});
+
+test('Check Type Miss', () => {
+  expect(() => {
+    optionValidator(
+      {
+        a: {},
+      },
+      {
+        a: [],
+      },
+    );
+  }).toThrowError(/Type Error/);
+
+  expect(() => {
+    optionValidator(
+      {
+        a: [],
+      },
+      {
+        a: {},
+      },
+    );
   }).toThrowError(/Type Error/);
 });

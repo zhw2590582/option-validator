@@ -10,28 +10,36 @@ function optionValidator(option, scheme, paths = ['option']) {
 function checkChild(option, scheme, paths) {
   const schemeType = kindOf(scheme);
   const optionType = kindOf(option);
-  if (schemeType === 'object' && optionType === 'object') {
-    Object.keys(scheme).forEach(key => {
-      const childOption = option[key];
-      const childScheme = scheme[key];
-      const childPath = paths.slice();
-      childPath.push(key);
-      checkType(childOption, childScheme, childPath);
-      checkValidator(childOption, childScheme, childPath);
-      optionValidator(childOption, childScheme, childPath);
-    });
+  if (schemeType === 'object') {
+    if (optionType === 'object') {
+      Object.keys(scheme).forEach(key => {
+        const childOption = option[key];
+        const childScheme = scheme[key];
+        const childPath = paths.slice();
+        childPath.push(key);
+        checkType(childOption, childScheme, childPath);
+        checkValidator(childOption, childScheme, childPath);
+        optionValidator(childOption, childScheme, childPath);
+      });
+    } else {
+      throw new Error(`[Type Error]: '${paths.join('.')}' require 'object' type, but got '${optionType}'`);
+    }
   }
 
-  if (schemeType === 'array' && optionType === 'array') {
-    option.forEach((_, key) => {
-      const childOption = option[key];
-      const childScheme = scheme[key] || scheme[0];
-      const childPath = paths.slice();
-      childPath.push(key);
-      checkType(childOption, childScheme, childPath);
-      checkValidator(childOption, childScheme, childPath);
-      optionValidator(childOption, childScheme, childPath);
-    });
+  if (schemeType === 'array') {
+    if (optionType === 'array') {
+      option.forEach((_, key) => {
+        const childOption = option[key];
+        const childScheme = scheme[key] || scheme[0];
+        const childPath = paths.slice();
+        childPath.push(key);
+        checkType(childOption, childScheme, childPath);
+        checkValidator(childOption, childScheme, childPath);
+        optionValidator(childOption, childScheme, childPath);
+      });
+    } else {
+      throw new Error(`[Type Error]: '${paths.join('.')}' require 'array' type, but got '${optionType}'`);
+    }
   }
 }
 
