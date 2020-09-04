@@ -12,7 +12,7 @@ function checkChild(option, scheme, paths) {
   const optionType = kindOf(option);
   if (schemeType === 'object') {
     if (optionType === 'object') {
-      Object.keys(scheme).forEach(key => {
+      Object.keys(scheme).forEach((key) => {
         const childOption = option[key];
         const childScheme = scheme[key];
         const childPath = paths.slice();
@@ -47,12 +47,15 @@ function checkType(option, scheme, paths) {
   if (kindOf(scheme) !== 'string') return;
   const optionType = kindOf(option);
   let result = false;
+  if (scheme[0] === '?') {
+    scheme = scheme.slice(1) + '|undefined';
+  }
   if (scheme.indexOf('|') > -1) {
     result = scheme
       .split('|')
-      .map(item => item.toLowerCase().trim())
+      .map((item) => item.toLowerCase().trim())
       .filter(Boolean)
-      .some(item => optionType === item);
+      .some((item) => optionType === item);
   } else {
     result = scheme.toLowerCase().trim() === optionType;
   }
@@ -72,7 +75,9 @@ function checkValidator(option, scheme, paths) {
   } else if (resultType === 'error') {
     throw result;
   } else {
-    throw new Error(`[Validator Error]: The scheme for '${paths.join('.')}' validator require return true, but got '${result}'`);
+    throw new Error(
+      `[Validator Error]: The scheme for '${paths.join('.')}' validator require return true, but got '${result}'`
+    );
   }
 }
 

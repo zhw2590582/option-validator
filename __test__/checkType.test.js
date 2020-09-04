@@ -2,7 +2,7 @@ import optionValidator from '../index';
 import { option, scheme } from './testData';
 
 test('Check Type Shallow', () => {
-  Object.keys(option).forEach(key => {
+  Object.keys(option).forEach((key) => {
     const optionValue = option[key];
     const schemeValue = scheme[key];
     optionValidator(optionValue, schemeValue);
@@ -183,4 +183,32 @@ test('Check Type Miss', () => {
       },
     );
   }).toThrowError(/Type Error/);
+});
+
+test('Check Shallow Optional Type', () => {
+  optionValidator(
+    {
+      // a: 'test',
+      b: 123,
+    },
+    {
+      a: '?string',
+      b: 'number',
+    },
+  );
+});
+
+test('Check Deep Optional Type', () => {
+  optionValidator(
+    {
+      a: {
+        // b: 'test',
+      },
+    },
+    {
+      a: {
+        b: '?number',
+      },
+    },
+  );
 });
